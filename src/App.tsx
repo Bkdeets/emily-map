@@ -196,7 +196,15 @@ function MapApp({ token }: { token: string }) {
           pulse={pulseId === selected.id}
           milesAway={position ? milesBetween(position, selected) : null}
           onClose={() => setSelectedId(null)}
-          onEdit={isAdmin ? () => setEditing(selected) : undefined}
+          onEdit={
+            isAdmin
+              ? () => {
+                  ensureAdminPassword()
+                  setPickedPoint(null)
+                  setEditing(selected)
+                }
+              : undefined
+          }
         />
       )}
 
