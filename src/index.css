@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-place: #16a34a;
+  --color-live: #38bdf8;
+  --font-sans: ui-rounded, 'SF Pro Rounded', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Pulsing light blue live-location dot */
+.live-dot {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-live);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+}
+.live-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: var(--color-live);
+  animation: live-ring 2s ease-out infinite;
+  z-index: -1;
+}
+@keyframes live-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Card pulse when you get within a mile of a place */
+.card-pulse {
+  animation: card-pulse 1.6s ease-in-out 4;
+}
+@keyframes card-pulse {
+  0%,
+  100% {
+    box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15), 0 0 0 0 rgb(22 163 74 / 0.55);
+  }
+  50% {
+    box-shadow: 0 -4px 24px rgb(0 0 0 / 0.15), 0 0 0 14px rgb(22 163 74 / 0);
+    transform: translateY(-4px);
+  }
+}
+
+.sheet-in {
+  animation: sheet-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot::before,
+  .card-pulse,
+  .sheet-in {
+    animation: none;
+  }
+}
