@@ -218,14 +218,14 @@ function MapApp({ token }: { token: string }) {
         <PlaceForm
           key={editing.id ?? 'new'}
           token={token}
-          initial={editing.sample ? { ...editing, id: undefined } : editing}
+          initial={editing}
           password={adminPassword}
           hidden={picking}
           pickedPoint={pickedPoint}
           onPickOnMap={() => setPicking(true)}
           onSave={handleSave}
           onDelete={
-            editing.id && !editing.sample
+            editing.id
               ? async () => {
                   await deletePlace(editing.id!, ensureAdminPassword())
                   setEditing(null)

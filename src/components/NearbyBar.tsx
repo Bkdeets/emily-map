@@ -25,7 +25,7 @@ export function NearbyBar({ items, label, onSelect }: Props) {
             {item.photos[0] ? (
               <img src={item.photos[0].url} alt="" loading="lazy" className="h-16 w-16 shrink-0 rounded-xl bg-stone-100 object-cover" />
             ) : (
-              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-green-50 text-2xl">📍</div>
+              <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-green-50 text-3xl">{item.emoji ?? '📍'}</div>
             )}
             <div className="min-w-0">
               <p className="truncate font-semibold text-stone-900">{item.name}</p>

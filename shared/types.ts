@@ -15,7 +15,8 @@ export interface Place {
   date?: string
   description?: string
   photos: Photo[]
-  sample?: boolean
+  /** Shown inside the map dot instead of a plain green dot */
+  emoji?: string
 }
 
 export interface LivePosition {

@@ -29,7 +29,10 @@ export function PlaceCard({ place, pulse, milesAway, onClose, onEdit }: Props) {
           <PhotoStrip photos={place.photos} />
           <header className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-xl leading-tight font-semibold text-stone-900">{place.name}</h2>
+              <h2 className="text-xl leading-tight font-semibold text-stone-900">
+                {place.emoji && <span className="mr-1.5">{place.emoji}</span>}
+                {place.name}
+              </h2>
               <p className="mt-0.5 text-sm text-stone-500">
                 {[place.status === 'wishlist' ? 'Want to go' : place.date, milesAway !== null ? `${formatMiles(milesAway)} away` : null]
                   .filter(Boolean)

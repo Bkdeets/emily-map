@@ -25,6 +25,7 @@ const input = 'w-full rounded-xl border border-stone-200 px-3 py-2.5 text-base o
 
 export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPickOnMap, onSave, onDelete, onCancel }: Props) {
   const [name, setName] = useState(initial.name ?? '')
+  const [emoji, setEmoji] = useState(initial.emoji ?? '')
   const [status, setStatus] = useState<PlaceStatus>(initial.status ?? 'visited')
   const [date, setDate] = useState(initial.date ?? '')
   const [description, setDescription] = useState(initial.description ?? '')
@@ -73,7 +74,7 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
     setBusy(true)
     setError(null)
     try {
-      await onSave({ id: initial.id, name, status, date, description, photos, ...point })
+      await onSave({ id: initial.id, name, emoji, status, date, description, photos, ...point })
     } catch (e) {
       setError((e as Error).message)
       setBusy(false)
@@ -91,7 +92,16 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
         </div>
 
         <div className="space-y-3">
-          <input className={input} placeholder="Name, e.g. Our first date" value={name} onChange={(e) => setName(e.target.value)} />
+          <div className="flex gap-2">
+            <input
+              className={`${input} w-16 shrink-0 text-center text-xl`}
+              placeholder="🙂"
+              aria-label="Emoji"
+              value={emoji}
+              onChange={(e) => setEmoji(e.target.value)}
+            />
+            <input className={input} placeholder="Name, e.g. Our first date" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
 
           <div className="grid grid-cols-2 gap-2">
             {(['visited', 'wishlist'] as const).map((s) => (
