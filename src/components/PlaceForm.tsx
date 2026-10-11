@@ -36,10 +36,24 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
   const [uploading, setUploading] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [dragging, setDragging] = useState(false)
 
   useEffect(() => {
     if (pickedPoint) setPoint(pickedPoint)
   }, [pickedPoint])
+
+  // A photo dropped just outside the sheet would otherwise make the browser open it and lose the form.
+  useEffect(() => {
+    const block = (e: DragEvent) => {
+      if (e.dataTransfer?.types.includes('Files')) e.preventDefault()
+    }
+    window.addEventListener('dragover', block)
+    window.addEventListener('drop', block)
+    return () => {
+      window.removeEventListener('dragover', block)
+      window.removeEventListener('drop', block)
+    }
+  }, [])
 
   async function search() {
     if (!query.trim()) return
@@ -53,11 +67,16 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
     )
   }
 
-  async function addFiles(files: FileList | null) {
-    if (!files?.length) return
+  async function addFiles(list: FileList | null) {
+    if (uploading) return
+    const files = [...(list ?? [])].filter((f) => f.type.startsWith('image/'))
+    if (!files.length) {
+      if (list?.length) setError('Only image files can be added.')
+      return
+    }
     setError(null)
     try {
-      for (const [i, file] of [...files].entries()) {
+      for (const [i, file] of files.entries()) {
         setUploading(`Uploading ${i + 1} of ${files.length}…`)
         const url = await uploadPhoto(file, password, (pct) => setUploading(`Uploading ${i + 1} of ${files.length}… ${Math.round(pct)}%`))
         setPhotos((p) => [...p, { url }])
@@ -83,7 +102,25 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
 
   return (
     <div className={`absolute inset-x-0 bottom-0 z-30 flex justify-center ${hidden ? 'hidden' : ''}`}>
-      <div className="sheet-in pb-safe max-h-[85dvh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-4 shadow-2xl">
+      <div
+        className={`sheet-in pb-safe max-h-[85dvh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-4 shadow-2xl ${dragging ? 'ring-4 ring-green-500 ring-inset' : ''}`}
+        onDragOver={(e) => {
+          if (!e.dataTransfer.types.includes('Files')) return
+          e.preventDefault()
+          e.dataTransfer.dropEffect = 'copy'
+          setDragging(true)
+        }}
+        onDragLeave={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false)
+        }}
+        onDrop={(e) => {
+          if (!e.dataTransfer.types.includes('Files')) return
+          e.preventDefault()
+          e.stopPropagation()
+          setDragging(false)
+          addFiles(e.dataTransfer.files)
+        }}
+      >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">{initial.id ? 'Edit place' : 'New place'}</h2>
           <button onClick={onCancel} className="text-sm text-stone-500">
@@ -167,11 +204,18 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
                   </button>
                 </div>
               ))}
-              <label className="grid h-20 w-20 shrink-0 cursor-pointer place-items-center rounded-xl border-2 border-dashed border-stone-300 text-2xl text-stone-400">
+              <label
+                className={`grid h-20 w-20 shrink-0 cursor-pointer place-items-center rounded-xl border-2 border-dashed text-2xl ${dragging ? 'border-green-500 bg-green-50 text-green-600' : 'border-stone-300 text-stone-400'}`}
+              >
                 +
-                <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
+                <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                    addFiles(e.target.files)
+                    e.target.value = ''
+                  }}
+                />
               </label>
             </div>
+            {dragging && !uploading && <p className="mt-1 text-sm font-medium text-green-700">Drop photos to add them</p>}
             {uploading && <p className="mt-1 text-sm text-stone-500">{uploading}</p>}
           </div>
 
