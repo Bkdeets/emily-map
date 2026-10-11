@@ -33,12 +33,33 @@ export async function deletePlace(id: string, password: string) {
 }
 
 export async function uploadPhoto(file: File, password: string, onProgress?: (pct: number) => void) {
-  const safeName = file.name.replace(/[^\w.-]+/g, '-')
-  const blob = await upload(`photos/${safeName}`, file, {
-    access: 'public',
-    handleUploadUrl: '/api/upload',
-    clientPayload: password,
-    onUploadProgress: (e) => onProgress?.(e.percentage),
-  })
-  return blob.url
+  const pathname = `photos/${file.name.replace(/[^\w.-]+/g, '-')}`
+  try {
+    const blob = await upload(pathname, file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload',
+      clientPayload: password,
+      onUploadProgress: (e) => onProgress?.(e.percentage),
+    })
+    return blob.url
+  } catch (e) {
+    throw new Error((await uploadFailureReason(pathname, password)) ?? (e as Error).message)
+  }
+}
+
+// The Blob client hides why /api/upload refused it, so ask again and read the answer ourselves.
+async function uploadFailureReason(pathname: string, password: string): Promise<string | null> {
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ type: 'blob.generate-client-token', payload: { pathname, clientPayload: password, multipart: false } }),
+    })
+    if (!res.headers.get('content-type')?.includes('json')) {
+      return 'Photo uploads need the /api server, which plain `npm run dev` does not run. Use the deployed site or `npm run dev:full`.'
+    }
+    return res.ok ? null : ((await res.json()).error ?? null)
+  } catch {
+    return null
+  }
 }
