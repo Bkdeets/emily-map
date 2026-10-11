@@ -161,9 +161,14 @@ function MapApp({ token }: { token: string }) {
       />
 
       {/* Top bar */}
-      <div className="pt-safe pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-2 p-3">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-2 p-3 pt-[calc(env(safe-area-inset-top)+1.25rem)]">
         <div className="pointer-events-auto flex flex-col items-start gap-2">
-          <h1 className="rounded-full bg-white/95 px-3.5 py-1.5 text-base font-semibold text-stone-900 shadow-lg">Our places 💚</h1>
+          <h1 className="rounded-full bg-white/95 px-3.5 py-1.5 text-base font-semibold whitespace-nowrap text-stone-900 shadow-lg">
+            Everywhere,
+            <span className="title-tail" aria-hidden="true">
+              <span>&nbsp;I love you</span>
+            </span>
+          </h1>
           <button
             onClick={() => (me ? stopSharing() : setPromptOpen(true))}
             className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium text-stone-600 shadow"

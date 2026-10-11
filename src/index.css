@@ -76,6 +76,27 @@ body,
   }
 }
 
+/* Title opens as the full sentence, then the tail fades and collapses to leave "Everywhere," */
+.title-tail {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  vertical-align: bottom;
+  animation: title-tail-out 2.4s cubic-bezier(0.4, 0, 0.2, 1) 3.4s forwards;
+}
+.title-tail > span {
+  min-width: 0;
+  overflow: hidden;
+}
+@keyframes title-tail-out {
+  45% {
+    opacity: 0;
+  }
+  100% {
+    grid-template-columns: 0fr;
+    opacity: 0;
+  }
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -88,5 +109,8 @@ body,
   .card-pulse,
   .sheet-in {
     animation: none;
+  }
+  .title-tail {
+    display: none;
   }
 }

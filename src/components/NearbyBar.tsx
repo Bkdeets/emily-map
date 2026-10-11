@@ -15,7 +15,7 @@ export function NearbyBar({ items, label, onSelect }: Props) {
       <p className="pointer-events-none mb-1.5 ml-4 inline-block rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-stone-600 shadow">
         {label}
       </p>
-      <div className="no-scrollbar pointer-events-auto flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4">
+      <div className="no-scrollbar pointer-events-auto flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-4">
         {items.map(({ item, miles }) => (
           <button
             key={item.id}
