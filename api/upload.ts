@@ -1,5 +1,5 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
-import { safeEqual, json } from './_lib/auth'
+import { safeEqual, json } from './_lib/auth.js'
 
 // Issues short-lived tokens so the browser can upload photos straight to Vercel Blob.
 export async function POST(request: Request) {

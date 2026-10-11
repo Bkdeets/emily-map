@@ -56,6 +56,7 @@ async function uploadFailureReason(pathname: string, password: string): Promise<
       body: JSON.stringify({ type: 'blob.generate-client-token', payload: { pathname, clientPayload: password, multipart: false } }),
     })
     if (!res.headers.get('content-type')?.includes('json')) {
+      if (res.status >= 500) return `The upload server crashed (${res.status}). Check the function logs in Vercel.`
       return 'Photo uploads need the /api server, which plain `npm run dev` does not run. Use the deployed site or `npm run dev:full`.'
     }
     return res.ok ? null : ((await res.json()).error ?? null)

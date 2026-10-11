@@ -1,6 +1,6 @@
 import Ably from 'ably'
-import { LIVE_CHANNEL, PEOPLE, type Person } from '../shared/types'
-import { safeEqual, json } from './_lib/auth'
+import { LIVE_CHANNEL, PEOPLE, type Person } from '../shared/types.js'
+import { safeEqual, json } from './_lib/auth.js'
 
 // Hands the browser a short-lived Ably token scoped to the live-location channel,
 // so the Ably API key never leaves the server.

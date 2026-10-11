@@ -1,4 +1,4 @@
-import type { Place } from './types'
+import type { Place } from './types.js'
 
 // Our places. These are built into the app; edits, photos and new places made with ?admin
 // are saved to the database and layered on top (see api/places.ts).

@@ -1,7 +1,7 @@
-import type { Place } from '../shared/types'
-import { seedPlaces } from '../shared/places'
-import { redis, PLACES_KEY } from './_lib/redis'
-import { isAdmin, json } from './_lib/auth'
+import type { Place } from '../shared/types.js'
+import { seedPlaces } from '../shared/places.js'
+import { redis, PLACES_KEY } from './_lib/redis.js'
+import { isAdmin, json } from './_lib/auth.js'
 
 // The built-in places live in shared/places.ts. Redis stores edits and new places by id,
 // and a { id, deleted: true } marker when a built-in place is deleted.
