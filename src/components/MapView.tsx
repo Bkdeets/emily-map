@@ -64,16 +64,19 @@ export const MapView = forwardRef<MapRef, Props>(function MapView(
             }}
           >
             {/* Large invisible hit area around a small dot for easy tapping */}
-            <button aria-label={place.name} className="grid h-10 w-10 place-items-center">
+            <button aria-label={place.name} className="grid h-11 w-11 place-items-center">
               <span
                 className={[
-                  'block rounded-full transition-transform duration-200',
+                  'grid place-items-center rounded-full leading-none transition-transform duration-200',
+                  place.emoji ? 'h-8 w-8 text-[17px]' : 'h-4 w-4',
                   place.status === 'visited'
-                    ? 'h-4 w-4 bg-place ring-2 ring-white shadow-md'
-                    : 'h-4 w-4 border-[3px] border-place bg-transparent',
-                  selected ? 'scale-150' : '',
+                    ? 'bg-place ring-2 ring-white shadow-md'
+                    : `border-[3px] border-place ${place.emoji ? 'bg-white/85' : 'bg-transparent'}`,
+                  selected ? (place.emoji ? 'scale-125' : 'scale-150') : '',
                 ].join(' ')}
-              />
+              >
+                {place.emoji}
+              </span>
             </button>
           </Marker>
         )

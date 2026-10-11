@@ -1,6 +1,6 @@
 import { upload } from '@vercel/blob/client'
 import type { Place } from '../../shared/types'
-import { samplePlaces } from '../../shared/samplePlaces'
+import { seedPlaces } from '../../shared/places'
 
 export async function fetchPlaces(): Promise<{ places: Place[]; configured: boolean }> {
   try {
@@ -8,8 +8,8 @@ export async function fetchPlaces(): Promise<{ places: Place[]; configured: bool
     if (!res.ok || !res.headers.get('content-type')?.includes('json')) throw new Error(String(res.status))
     return await res.json()
   } catch {
-    // Plain `vite` dev server has no /api, so fall back to the sample places.
-    return { places: samplePlaces, configured: false }
+    // Plain `vite` dev server has no /api, so fall back to the built-in places.
+    return { places: seedPlaces, configured: false }
   }
 }
 

@@ -4,7 +4,7 @@ A mobile-first map of the places Britton and Emily have been together (solid gre
 
 ## Features
 
-- **Memory cards.** Tap a dot to open a bottom sheet with swipeable photos, the date and the memory.
+- **Memory cards.** Each place has its own emoji marker. Tap one to open a bottom sheet with swipeable photos, the date and the memory.
 - **Nearby bar.** A floating row at the bottom shows the 3 nearest places (to you, or to the map center if location is off).
 - **Proximity.** With location on, coming within 1 mile of a place opens its card automatically and makes it pulse.
 - **Live location.** Each person picks "I'm Britton" or "I'm Emily" once. When you're both on the app, you see each other, a route between you, and the miles apart in the top right.
@@ -26,7 +26,7 @@ Serverless API routes live in `api/`:
 - `POST /api/upload` issues short-lived Blob upload tokens (admin password).
 - `GET /api/ably-token` issues short-lived Ably tokens scoped to the live-location channel, optionally behind `LIVE_PASSCODE`.
 
-Until a database is connected, or before the first real place is saved, the map shows a few clearly labeled sample places.
+The 24 places and memories are built into `shared/places.ts`, each with its own emoji marker, so the map works before a database is connected. Edits, photos and new places made with `?admin` are saved to Redis and layered on top; deleting a built-in place hides it.
 
 ## Setup
 
@@ -57,7 +57,7 @@ Geolocation needs HTTPS on phones, so test location features on the Vercel previ
 
 ### 3. Add your places
 
-Open `/?admin` on your phone, tap **+**, search for the place or tap it on the map, write the memory, add photos, save. The samples disappear once the first real place is saved.
+Open `/?admin` on your phone. Tap a place and **Edit this place** to add photos or move its pin, or tap **+** to add a new one (search for it or tap the map, pick an emoji, write the memory, add photos, save).
 
 ## Tip
 
