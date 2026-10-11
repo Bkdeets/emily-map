@@ -131,7 +131,7 @@ export function PlaceForm({ token, initial, password, hidden, pickedPoint, onPic
         <div className="space-y-3">
           <div className="flex gap-2">
             <input
-              className={`${input} w-16 shrink-0 text-center text-xl`}
+              className={`${input} w-16! shrink-0 text-center text-xl`}
               placeholder="🙂"
               aria-label="Emoji"
               value={emoji}

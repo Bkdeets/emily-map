@@ -34,16 +34,20 @@ export async function deletePlace(id: string, password: string) {
 
 export async function uploadPhoto(file: File, password: string, onProgress?: (pct: number) => void) {
   const pathname = `photos/${file.name.replace(/[^\w.-]+/g, '-')}`
+  // The Blob client can deliver its last progress event after the upload has already resolved.
+  let settled = false
   try {
     const blob = await upload(pathname, file, {
       access: 'public',
       handleUploadUrl: '/api/upload',
       clientPayload: password,
-      onUploadProgress: (e) => onProgress?.(e.percentage),
+      onUploadProgress: (e) => !settled && onProgress?.(e.percentage),
     })
     return blob.url
   } catch (e) {
     throw new Error((await uploadFailureReason(pathname, password)) ?? (e as Error).message)
+  } finally {
+    settled = true
   }
 }
 
